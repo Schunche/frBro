@@ -3,7 +3,6 @@ if __name__ == "__main__":
     exit(0)
 
 import os
-import json
 
 from dataclasses import \
     dataclass,\
@@ -11,12 +10,12 @@ from dataclasses import \
 from typing import \
     Self
 
-from src.code.logger import \
-    log_fatal_error,\
-    log_success
 from src.code.const import \
     Coordinate,\
     Tile
+from src.code.logger import \
+    log_fatal_error,\
+    log_success
 from src.code.loader import \
     load_json
 
@@ -50,10 +49,12 @@ def load_map(
         )
         return None
     
-    rtilemap: dict[Coordinate, Tile] = {}
+    rtilemap: dict[Coordinate, Tile] = field(
+        default_factory=dict
+    )
     for str_key, value in rmap["tilemap"].items():
-        key_parts = str_key.split(';')
-        key = (int(key_parts[0]), int(key_parts[1]))
+        key_parts: list[str, str] = str_key.split(';')
+        key: Coordinate = (int(key_parts[0]), int(key_parts[1]))
         rtilemap[key] = value
 
     return Map(

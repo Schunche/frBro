@@ -1,7 +1,18 @@
 {
-    "tile_size":   0.075,
-    "window": {
-        "title":   "PLACEHOLDER"
+    "global": {
+        "tile_size": 32
+    }, "mob": {
+        "player": {
+            "width": 48,
+            "height": 80
+        }
+    }, "window": {
+        "title": "PLACEHOLDER",
+        "allowed_display_resolutions": {
+            "HD":     [1280,  720],
+            "HD+":    [1600,  900],
+            "FullHD": [1920, 1080]
+        }
     }, "color": {
         "red":               [255,   0,   0],
         "green":             [  0, 255,   0],
@@ -19,10 +30,36 @@
         "gray127":           [127, 127, 127],
         "gray63":            [ 63,  63,  63],
         "gray31":            [ 31,  31,  31],
+        "gray15":            [ 15,  15,  15],
+        "gray7":             [  7,   7,   7],
         
         "gray3/4":           [191, 191, 191]
     }, "theme_selection": [
         "dark" ,
         "light"
-    ]
+    ], "theme_style": {
+        "dark": {
+            "debug_text_color":   "cyan",
+            "background":         "gray31",
+            "button_bg_color":    "gray31",
+            "button_hover_color": "gray63",
+            "button_text_color":  "gray3/4"
+        }, "light": {
+            "debug_text_color":   "magenta",
+            "background":         "gray3/4",
+            "button_bg_color":    "gray3/4",
+            "button_hover_color": "gray127",
+            "button_text_color":  "gray31"
+        }
+    }, "gui": {
+        "global": {
+            "outer_padding": 64,
+            "element_interval": 48
+        }, "button": {
+            "border_width": 8,
+            "border_radius": 8
+        }
+    }, "duarbility_of_tile": {
+        "dirt": 75
+    }
 }

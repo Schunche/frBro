@@ -1,7 +1,8 @@
 {
     "tilemap": {
         "0;0":{
-            "block": "dirt"
+            "block": "dirt",
+            "variant": 0
         }
     }
 }

@@ -2,18 +2,31 @@ if __name__ != "__main__":
     exit(0)
 
 from typing import \
-    Self,\
-    NoReturn
+    Self    ,\
+    NoReturn,\
+    Any     ,\
+    Callable
+from types import \
+    MethodType
+
+import webbrowser
 
 try:
     import pygame
+
 except ImportError:
     print("You need to install pygame to run this file.")
     print("On Windows, run \'py -m pip install pygame\'")
     print("On Mac/Linux, run \'python3 -m pip install pygame\'")
     exit(1)
+pygame.init()
 
 try:
+    from src.code.const import \
+        ExitCode  ,\
+        Coordinate,\
+        Size
+
     from src.code.logger import \
         log            ,\
         log_success    ,\
@@ -25,8 +38,24 @@ try:
         WINDOW_SIZE,\
         FPS        ,\
         THEME      ,\
+                    \
+        FIX_STGS   ,\
+        TILE_SIZE  ,\
         TITLE      ,\
-        COLOR
+        RESOLUTIONS,\
+        COLOR      ,\
+        THEME_STYLE,\
+        GUI_STGS   ,\
+                    \
+        FONT32     ,\
+                    \
+        load_image
+    
+    from src.code.button import \
+        TextButton        ,\
+        ImageButton       ,\
+        ChangingTextButton,\
+        get_buttons
     
     from src.code.map import \
         Map     ,\
@@ -36,19 +65,80 @@ try:
 except Exception as e:
     print(e)
     print("You do not have the necessary modules in the correct directories.")
-    pygame.quit(1)
+    pygame.quit()
     exit(1)
+
+try:
+    buttons: dict[str, dict[str, TextButton | ImageButton | ChangingTextButton]] = get_buttons(
+        WINDOW_SIZE
+    )
     
+    def update_button_functionality() -> None:
+        def __main_menu__play__    (self: TextButton, *args, **kwargs) -> None: args[0].set_state("player_selection")
+        def __main_menu__settings__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("settings")
+        def __main_menu__credits__ (self: TextButton, *args, **kwargs) -> None: args[0].set_state("credits")
+        def __main_menu__exit__    (self: TextButton, *args, **kwargs) -> None: args[0].proper_exit()
+        def __main_menu__teaser__  (self: TextButton, *args, **kwargs) -> None:
+            webbrowser.open('https://github.com/Schunche', new=2)
+            args[0].proper_exit(0)
+
+        def __player_selection__back__(self: ImageButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
+
+        def __settings__display_resolution__(self: ChangingTextButton, *args, **kwags) -> None:
+            global RESOLUTIONS
+            global WINDOW_SIZE
+
+            if WINDOW_SIZE not in RESOLUTIONS:
+                raise ValueError("Current WINDOW_SIZE is not in the allowed_display_resolutions dictionary.")
+
+            WINDOW_SIZE = RESOLUTIONS[(RESOLUTIONS.index(WINDOW_SIZE) + 1) % len(RESOLUTIONS)]
+            
+            args[0].WINDOW = pygame.display.set_mode(
+                WINDOW_SIZE,
+                args[0].WINDOW.get_flags()
+            )
+
+        def __settings__fullscreen__(self: ChangingTextButton, *args, **kwags) -> None:
+            global RESOLUTIONS
+            global WINDOW_SIZE
+
+            if WINDOW_SIZE not in RESOLUTIONS:
+                raise ValueError("Current WINDOW_SIZE is not in the allowed_display_resolutions dictionary.")
+
+            WINDOW_SIZE = RESOLUTIONS[(RESOLUTIONS.index(WINDOW_SIZE) + 1) % len(RESOLUTIONS)]
+            
+            args[0].WINDOW = pygame.display.set_mode(
+                WINDOW_SIZE,
+                args[0].WINDOW.get_flags()
+            )
+
+        for state, butt in buttons.items():
+            for name, button in butt.items():
+                try:
+                    exec(
+                        f"button.push = MethodType(__{state}__{name}__, button)"
+                    ) # https://stackoverflow.com/questions/394770/override-a-method-at-instance-level
+                except:
+                    log_error(
+                        f"couldn\'t execute expression: button.push = MethodType(__{state}__{name}__, button)"
+                    )
+    
+    update_button_functionality()
+    
+except:
+    log_fatal_error("Something ain\'t working at \'button.push()\' re-assigns")
+    exit(1)
+
 class Main:
     def proper_exit(
         self: Self,
-        exit_code: int | None | str = 0
+        exit_code: ExitCode = 0
     ) -> NoReturn:
         pygame.quit()
         log_success(f"\'pygame\' quit")
 
         log_success(f"\'MAIN\' quit")
-        log_success(f"ExitCode := {exit_code}")
+        log_success(f"ExitCode: {exit_code}")
         exit(exit_code)
 
     def set_state(
@@ -58,31 +148,15 @@ class Main:
         self.state: str = state
         log_success(f"state set to: \'{state}\'")
 
-    def update_theme(
-        self: Self,
-        theme: str
-    ) -> None:
-        THEME: str = theme
-        match theme:
-            case "dark":
-                self.bg_color: pygame.color.Color = COLOR["gray31"]
-            case "light":
-                self.bg_color: pygame.color.Color = COLOR["gray3/4"]
-            case _:
-                log_fatal_error(
-                    f"Invalid theme: {theme}"
-                )
-                self.proper_exit(1)
-
     def __init__(
         self: Self
     ) -> Self:
+        self.clock: pygame.time.Clock = pygame.time.Clock()
         self.WINDOW: pygame.Surface = pygame.display.set_mode(WINDOW_SIZE)
         pygame.display.set_caption(TITLE)
-        self.clock: pygame.time.Clock = pygame.time.Clock()
+        pygame.display.set_icon(load_image("logo/icon"))
 
         self.set_state("main_menu")
-        self.update_theme(THEME)
         log_debug(
             get_all_map_names(
                 
@@ -92,19 +166,47 @@ class Main:
     def handle_input(
         self: Self
     ) -> None | NoReturn:
-        self.mouse_pos: tuple[int] = pygame.mouse.get_pos()
-        for event in pygame.event.get():
-            match event.type:
-                case pygame.QUIT:
-                    self.proper_exit(0)
-                
-                case pygame.KEYDOWN:
-                    match event.key:
-                        case pygame.K_ESCAPE:
-                            self.proper_exit(0)
+        self.mouse_pos: Coordinate = pygame.mouse.get_pos()
 
-                        case _: pass
-                case _: pass
+        for event in pygame.event.get():
+            das_event = pygame.constants.__dict__
+            event_name = list(das_event.keys())[list(das_event.values()).index(event.type)]
+            #log_debug(f"{event_name}: {event.type}")
+
+            if event.type == pygame.QUIT:
+                    self.proper_exit(0)
+
+            if event.type == pygame.WINDOWSIZECHANGED:
+                global buttons
+                buttons = get_buttons(
+                    WINDOW_SIZE
+                )
+                update_button_functionality()
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    for name, button in buttons[self.state].items():
+                        if button.inner_rect.collidepoint(self.mouse_pos):
+                            button.push(self)
+                            self.handle_input()
+                            break
+                
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    if self.state == "main_menu":
+                        self.proper_exit(0)
+                    elif self.state in [
+                        "player_selection",
+                        "settings",
+                        "credits"
+                    ]:
+                        self.set_state("main_menu")
+
+                if event.key == pygame.K_F11:
+                    if pygame.FULLSCREEN & self.WINDOW.get_flags():
+                        self.WINDOW: pygame.Surface = pygame.display.set_mode(self.WINDOW.get_size())
+                    else:
+                        self.WINDOW: pygame.Surface = pygame.display.set_mode(self.WINDOW.get_size(), flags=pygame.FULLSCREEN)
 
     def update(
         self: Self
@@ -112,12 +214,60 @@ class Main:
         pass
 
     def render(
-        self: Self
+        self: Self,
+        debug: bool = False
     ) -> None:
         self.WINDOW.fill(
-            self.bg_color
+            COLOR[THEME_STYLE[THEME]["background"]]
         )
-        
+
+        for name, button in buttons[self.state].items():
+            if isinstance(button, ChangingTextButton) and self.state == "settings":
+                if name == "display_resolution":
+                    resolution_key: str = [
+                        key for key, resolution in FIX_STGS["window"]["allowed_display_resolutions"].items() if resolution == WINDOW_SIZE
+                    ][0]
+                    button.render(
+                        self.WINDOW,
+                        self.mouse_pos,
+                        THEME,
+                        f"{resolution_key}: " + ", ".join([f"{side}px" for side in WINDOW_SIZE])
+                    )
+                elif name == "fullscreen":
+                    flags: int = self.WINDOW.get_flags()
+                    if flags & pygame.FULLSCREEN: msg: str = "Fullscreen"
+                    elif flags & pygame.NOFRAME: msg: str = "Windowed Borderless"
+                    else: msg: str = "Windowed"
+
+                    button.render(
+                        self.WINDOW,
+                        self.mouse_pos,
+                        THEME,
+                        msg
+                    )
+            else:
+                button.render(
+                    self.WINDOW,
+                    self.mouse_pos,
+                    THEME
+                )
+
+        if debug:
+            fps_text_rendered: pygame.Surface = FONT32.render(
+                f"FPS: {1 / self.dt:.2f}",
+                False,
+                COLOR[THEME_STYLE[THEME]["debug_text_color"]]
+            )
+            fps_text_rect: pygame.Rect = fps_text_rendered.get_rect(
+                topleft=(
+                    GUI_STGS["global"]["outer_padding"],
+                    GUI_STGS["global"]["outer_padding"]
+                )
+            )
+            self.WINDOW.blit(
+                fps_text_rendered,
+                fps_text_rect
+            )
 
     def run(
         self: Self
@@ -125,12 +275,12 @@ class Main:
         while True:
             self.dt: float = self.clock.tick(
                 FPS
-            )
+            ) * 0.001
 
             self.handle_input()
             self.update()
             self.render()
-
+            
             pygame.display.update()
 
 main: Main = Main()

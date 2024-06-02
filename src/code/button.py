@@ -380,6 +380,22 @@ def get_buttons(
             (GLOBAL_GUI_STGS["outer_padding"] + 1 * (button_width + GLOBAL_GUI_STGS["element_interval"]),
             GLOBAL_GUI_STGS["outer_padding"]),
             (button_width, button_height)
+        ), "fps": ChangingTextButton(
+            (GLOBAL_GUI_STGS["outer_padding"] + 2 * (button_width + GLOBAL_GUI_STGS["element_interval"]),
+            GLOBAL_GUI_STGS["outer_padding"]),
+            (button_width, button_height)
+        ), "theme": ChangingTextButton(
+            (GLOBAL_GUI_STGS["outer_padding"],
+            GLOBAL_GUI_STGS["outer_padding"]  + 1 * (button_height + GLOBAL_GUI_STGS["element_interval"])),
+            (button_width, button_height)
+        ), "cursor": ChangingTextButton(
+            (GLOBAL_GUI_STGS["outer_padding"] + 1 * (button_width + GLOBAL_GUI_STGS["element_interval"]),
+            GLOBAL_GUI_STGS["outer_padding"]  + 1 * (button_height + GLOBAL_GUI_STGS["element_interval"])),
+            (button_width, button_height)
+        ), "back": TextButton("Back",
+            (GLOBAL_GUI_STGS["outer_padding"] + 2 * (button_width + GLOBAL_GUI_STGS["element_interval"]),
+            GLOBAL_GUI_STGS["outer_padding"]  + 1 * (button_height + GLOBAL_GUI_STGS["element_interval"])),
+            (button_width, button_height)
         )
     }
 

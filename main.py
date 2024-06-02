@@ -35,21 +35,30 @@ try:
         log_debug
 
     from src.code.loader import \
-        WINDOW_SIZE,\
-        FPS        ,\
-        THEME      ,\
-                    \
-        FIX_STGS   ,\
-        TILE_SIZE  ,\
-        TITLE      ,\
-        RESOLUTIONS,\
-        COLOR      ,\
-        THEME_STYLE,\
-        GUI_STGS   ,\
-                    \
-        FONT32     ,\
-                    \
-        load_image
+        load_json    ,\
+                      \
+        WINDOW_SIZE  ,\
+        FPS          ,\
+        THEME        ,\
+                      \
+        FIX_STGS     ,\
+        TILE_SIZE    ,\
+        TITLE        ,\
+        RESOLUTIONS  ,\
+        FPS_LIST     ,\
+        CURSOR_LIST  ,\
+        COLOR        ,\
+        THEME_STYLE  ,\
+        GUI_STGS     ,\
+                      \
+        FONT32       ,\
+                      \
+        load_image   ,\
+                      \
+        CURSOR_SIZE  ,\
+        SYS_CURSOR   ,\
+        CURSOR_OFFSET,\
+        CURSORS       \
     
     from src.code.button import \
         TextButton        ,\
@@ -73,45 +82,81 @@ try:
         WINDOW_SIZE
     )
     
+    # == MAIN_MENU == #
+
+    def __main_menu__play__    (self: TextButton, *args, **kwargs) -> None: args[0].set_state("player_selection")
+    def __main_menu__settings__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("settings")
+    def __main_menu__credits__ (self: TextButton, *args, **kwargs) -> None: args[0].set_state("credits")
+    def __main_menu__exit__    (self: TextButton, *args, **kwargs) -> NoReturn: args[0].proper_exit()
+    def __main_menu__teaser__  (self: TextButton, *args, **kwargs) -> NoReturn:
+        webbrowser.open('https://github.com/Schunche', new=2)
+        args[0].proper_exit(0)
+
+    # == PLAYER_SELECTION == #
+    
+    def __player_selection__back__(self: ImageButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
+
+    # == SETTINGS == #
+
+    # TODO on rightclick setting goes backwards
+    # It should take up one more argument 
+    # OR check for click type in function / extenal function / when the button push gets called
+
+    def __settings__display_resolution__(self: ChangingTextButton, *args, **kwags) -> None:
+        global RESOLUTIONS
+        global WINDOW_SIZE
+
+        if WINDOW_SIZE not in RESOLUTIONS:
+            raise ValueError("Current WINDOW_SIZE is not in the allowed_display_resolutions dictionary.")
+        
+        WINDOW_SIZE = RESOLUTIONS[(RESOLUTIONS.index(WINDOW_SIZE) + 1) % len(RESOLUTIONS)]
+        
+        args[0].WINDOW = pygame.display.set_mode(
+            WINDOW_SIZE,
+            args[0].WINDOW.get_flags()
+        )
+
+    def __settings__fullscreen__(self: ChangingTextButton, *args, **kwags) -> None:
+        global WINDOW_SIZE
+        flags: int = args[0].WINDOW.get_flags()
+
+        #fulls -> nofra -> border -> fulls...
+        if flags & pygame.FULLSCREEN: new_flags: int = pygame.NOFRAME
+        elif flags & pygame.NOFRAME: new_flags: int = 0
+        else: new_flags: int = pygame.FULLSCREEN
+        
+        args[0].WINDOW = pygame.display.set_mode(
+            WINDOW_SIZE,
+            new_flags
+        )
+
+    def __settings__fps__(self: ChangingTextButton, *args, **kwags) -> None:
+        global FPS
+
+        if FPS not in FPS_LIST:
+            raise ValueError("The current FPS value is not in the FPS list.")
+
+        FPS = FPS_LIST[(FPS_LIST.index(FPS) + 1) % len(FPS_LIST)]
+
+    def __settings__theme__(self: ChangingTextButton, *args, **kwags) -> None:
+        global THEME
+
+        if THEME not in list(THEME_STYLE.keys()):
+            raise ValueError("The current theme is not valid.")
+
+        THEME = list(THEME_STYLE.keys())[(list(THEME_STYLE.keys()).index(THEME) + 1) % len(list(THEME_STYLE.keys()))]
+
+    def __settings__cursor__(self: ChangingTextButton, *args, **kwags) -> None:
+
+        if args[0].cursor_name not in CURSOR_LIST:
+            raise ValueError("The current cursor is not valid.")
+
+        # Set cursor to next on in the list
+        args[0].cursor_name = CURSOR_LIST[(CURSOR_LIST.index(args[0].cursor_name) + 1) % len(CURSOR_LIST)]
+
+    def __settings__back__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
+
     def update_button_functionality() -> None:
-        def __main_menu__play__    (self: TextButton, *args, **kwargs) -> None: args[0].set_state("player_selection")
-        def __main_menu__settings__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("settings")
-        def __main_menu__credits__ (self: TextButton, *args, **kwargs) -> None: args[0].set_state("credits")
-        def __main_menu__exit__    (self: TextButton, *args, **kwargs) -> None: args[0].proper_exit()
-        def __main_menu__teaser__  (self: TextButton, *args, **kwargs) -> None:
-            webbrowser.open('https://github.com/Schunche', new=2)
-            args[0].proper_exit(0)
-
-        def __player_selection__back__(self: ImageButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
-
-        def __settings__display_resolution__(self: ChangingTextButton, *args, **kwags) -> None:
-            global RESOLUTIONS
-            global WINDOW_SIZE
-
-            if WINDOW_SIZE not in RESOLUTIONS:
-                raise ValueError("Current WINDOW_SIZE is not in the allowed_display_resolutions dictionary.")
-
-            WINDOW_SIZE = RESOLUTIONS[(RESOLUTIONS.index(WINDOW_SIZE) + 1) % len(RESOLUTIONS)]
-            
-            args[0].WINDOW = pygame.display.set_mode(
-                WINDOW_SIZE,
-                args[0].WINDOW.get_flags()
-            )
-
-        def __settings__fullscreen__(self: ChangingTextButton, *args, **kwags) -> None:
-            global RESOLUTIONS
-            global WINDOW_SIZE
-
-            if WINDOW_SIZE not in RESOLUTIONS:
-                raise ValueError("Current WINDOW_SIZE is not in the allowed_display_resolutions dictionary.")
-
-            WINDOW_SIZE = RESOLUTIONS[(RESOLUTIONS.index(WINDOW_SIZE) + 1) % len(RESOLUTIONS)]
-            
-            args[0].WINDOW = pygame.display.set_mode(
-                WINDOW_SIZE,
-                args[0].WINDOW.get_flags()
-            )
-
         for state, butt in buttons.items():
             for name, button in butt.items():
                 try:
@@ -126,7 +171,9 @@ try:
     update_button_functionality()
     
 except:
-    log_fatal_error("Something ain\'t working at \'button.push()\' re-assigns")
+    log_fatal_error(
+        "Something ain\'t working at \'button.push()\' re-assigns"
+    )
     exit(1)
 
 class Main:
@@ -152,15 +199,29 @@ class Main:
         self: Self
     ) -> Self:
         self.clock: pygame.time.Clock = pygame.time.Clock()
-        self.WINDOW: pygame.Surface = pygame.display.set_mode(WINDOW_SIZE)
-        pygame.display.set_caption(TITLE)
-        pygame.display.set_icon(load_image("logo/icon"))
-
-        self.set_state("main_menu")
+        self.WINDOW: pygame.Surface = pygame.display.set_mode(
+            WINDOW_SIZE
+        )
+        pygame.display.set_caption(
+            TITLE
+        )
+        pygame.display.set_icon(
+            load_image(
+                "logo/icon"
+            )
+        )
+        self.cursor_name: None | str = None
+        print(CURSORS)
+        self.set_state(
+            "main_menu"
+        )
         log_debug(
             get_all_map_names(
                 
             )
+        )
+        log_debug(
+            CURSORS
         )
 
     def handle_input(
@@ -227,12 +288,14 @@ class Main:
                     resolution_key: str = [
                         key for key, resolution in FIX_STGS["window"]["allowed_display_resolutions"].items() if resolution == WINDOW_SIZE
                     ][0]
+
                     button.render(
                         self.WINDOW,
                         self.mouse_pos,
                         THEME,
                         f"{resolution_key}: " + ", ".join([f"{side}px" for side in WINDOW_SIZE])
                     )
+
                 elif name == "fullscreen":
                     flags: int = self.WINDOW.get_flags()
                     if flags & pygame.FULLSCREEN: msg: str = "Fullscreen"
@@ -245,12 +308,76 @@ class Main:
                         THEME,
                         msg
                     )
+
+                elif name == "fps":
+                    button.render(
+                        self.WINDOW,
+                        self.mouse_pos,
+                        THEME,
+                        f"{FPS} FPS"
+                    )
+
+                elif name == "theme":
+                    button.render(
+                        self.WINDOW,
+                        self.mouse_pos,
+                        THEME,
+                        THEME.title()
+                    )
+
+                elif name == "cursor":
+                    button.render(
+                        self.WINDOW,
+                        self.mouse_pos,
+                        THEME,
+                        "Cursor style: " + (str(self.cursor_name) if self.cursor_name is not None else f"System")
+                    )
+
             else:
                 button.render(
                     self.WINDOW,
                     self.mouse_pos,
                     THEME
                 )
+
+        for name, button in buttons[self.state].items():
+            if button.inner_rect.collidepoint(self.mouse_pos):
+                if self.cursor_name is None:
+                    pygame.mouse.set_cursor(SYS_CURSOR)
+                elif self.cursor_name == "pygame":
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                else:
+                    try:
+                        pygame.mouse.set_cursor(
+                            CURSOR_SIZE,
+                            CURSOR_OFFSET[self.cursor_name]["hand"],
+                            *CURSORS[self.cursor_name]["hand"]
+                        )
+                    except Exception as e:
+                        log_fatal_error(
+                            f"Something went wrong while handling cursor (hand): {e}"
+                        )
+                        exit(1)
+                
+                break
+        else:
+            #pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            if self.cursor_name is None:
+                pygame.mouse.set_cursor(SYS_CURSOR)
+            elif self.cursor_name == "pygame":
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            else:
+                try:
+                    pygame.mouse.set_cursor(
+                        CURSOR_SIZE,
+                        CURSOR_OFFSET[self.cursor_name]["arrow"],
+                        *CURSORS[self.cursor_name]["arrow"]
+                    )
+                except Exception as e:
+                    log_fatal_error(
+                        f"Something went wrong while handling cursor (arrow): {e}"
+                    )
+                    exit(1)
 
         if debug:
             fps_text_rendered: pygame.Surface = FONT32.render(
@@ -279,7 +406,7 @@ class Main:
 
             self.handle_input()
             self.update()
-            self.render()
+            self.render(True)
             
             pygame.display.update()
 

@@ -12,7 +12,17 @@
             "HD":     [1280,  720],
             "HD+":    [1600,  900],
             "FullHD": [1920, 1080]
-        }
+        }, "allowed_display_fps": [
+             24,
+             30,
+             60,
+            120,
+            240
+        ], "allowed_cursors": [
+            null,
+            "pygame",
+            "custom1"
+       ]
     }, "color": {
         "red":               [255,   0,   0],
         "green":             [  0, 255,   0],
@@ -34,10 +44,7 @@
         "gray7":             [  7,   7,   7],
         
         "gray3/4":           [191, 191, 191]
-    }, "theme_selection": [
-        "dark" ,
-        "light"
-    ], "theme_style": {
+    }, "theme_style": {
         "dark": {
             "debug_text_color":   "cyan",
             "background":         "gray31",

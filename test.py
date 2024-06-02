@@ -1,15 +1,10 @@
-import types
+import pygame
+import os
 
-class Dog:
-    def bark(self):
-        print("WOOF")
+for cursor_style in os.listdir("src/data/cursor"):
+    print(
+        os.listdir(
+            f"src/data/cursor/{cursor_style}"
+        )
+    )
 
-boby = Dog()
-boby.bark() # WOOF
-
-def _bark(self):
-    print("WoOoOoF!!")
-
-boby.bark = types.MethodType(_bark, boby)
-
-boby.bark() # WoOoOoF!!

@@ -67,3 +67,10 @@
         </ul>
     </li>
 </ul>
+
+## 2024. 05. 30
+Note: dict.keys() and dict.values() are not lists.  
+Button types:  
+1. given    text, that does not change, with    hover effect
+2. changing text, that does     change, with    hover effect
+3. image,       , that does not change, without hover effect

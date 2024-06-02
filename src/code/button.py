@@ -113,7 +113,7 @@ class TextButton:
 
         pygame.draw.rect(
             surface,
-            COLOR[THEME_STYLE[theme]["button_text_color"]],
+            COLOR[THEME_STYLE[theme]["button_border_color"]],
             self.border_rect,
             BUTTON_STGS["border_width"],
             BUTTON_STGS["border_radius"]
@@ -215,7 +215,7 @@ class ImageButton:
 
         pygame.draw.rect(
             surface,
-            COLOR[THEME_STYLE[theme]["button_text_color"]],
+            COLOR[THEME_STYLE[theme]["button_border_color"]],
             self.border_rect,
             BUTTON_STGS["border_width"],
             BUTTON_STGS["border_radius"]
@@ -300,7 +300,7 @@ class ChangingTextButton:
 
         pygame.draw.rect(
             surface,
-            COLOR[THEME_STYLE[theme]["button_text_color"]],
+            COLOR[THEME_STYLE[theme]["button_border_color"]],
             self.border_rect,
             BUTTON_STGS["border_width"],
             BUTTON_STGS["border_radius"]
@@ -344,6 +344,7 @@ def get_buttons(
 
     # ==>
     buttons["main_menu"] = {
+        # COL 1
         "play": TextButton("Play",
             (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"]),
             (button_width, button_height)
@@ -356,7 +357,9 @@ def get_buttons(
         ), "exit": TextButton("Exit",
             (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"] + 3 * (button_height + GLOBAL_GUI_STGS["element_interval"])),
             (button_width, button_height)
-        ), "teaser": ImageButton(teaser_new, (
+        ),
+        # MAIN IMAGE
+        "teaser": ImageButton(teaser_new, (
                 GLOBAL_GUI_STGS["outer_padding"] + button_width + GLOBAL_GUI_STGS["element_interval"],
                 GLOBAL_GUI_STGS["outer_padding"]
             ), teaser_new.get_size(),
@@ -364,7 +367,7 @@ def get_buttons(
         )
     }
 
-    # == SETTINGS == # TODO
+    # == SETTINGS == # APPLICABLE | EXTENDABLE
     rows: int = 3
     cols: int = 3
 
@@ -373,6 +376,7 @@ def get_buttons(
 
     # ==>
     buttons["settings"] = {
+        # ROW 1
         "display_resolution": ChangingTextButton(
             (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"]),
             (button_width, button_height)
@@ -384,7 +388,9 @@ def get_buttons(
             (GLOBAL_GUI_STGS["outer_padding"] + 2 * (button_width + GLOBAL_GUI_STGS["element_interval"]),
             GLOBAL_GUI_STGS["outer_padding"]),
             (button_width, button_height)
-        ), "theme": ChangingTextButton(
+        ),
+        # ROW 2
+        "theme": ChangingTextButton(
             (GLOBAL_GUI_STGS["outer_padding"],
             GLOBAL_GUI_STGS["outer_padding"]  + 1 * (button_height + GLOBAL_GUI_STGS["element_interval"])),
             (button_width, button_height)

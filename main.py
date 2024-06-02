@@ -56,7 +56,6 @@ try:
         load_image   ,\
                       \
         CURSOR_SIZE  ,\
-        SYS_CURSOR   ,\
         CURSOR_OFFSET,\
         CURSORS       \
     
@@ -220,9 +219,6 @@ class Main:
                 
             )
         )
-        log_debug(
-            CURSORS
-        )
 
     def handle_input(
         self: Self
@@ -343,41 +339,24 @@ class Main:
         for name, button in buttons[self.state].items():
             if button.inner_rect.collidepoint(self.mouse_pos):
                 if self.cursor_name is None:
-                    pygame.mouse.set_cursor(SYS_CURSOR)
-                elif self.cursor_name == "pygame":
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 else:
-                    try:
-                        pygame.mouse.set_cursor(
-                            CURSOR_SIZE,
-                            CURSOR_OFFSET[self.cursor_name]["hand"],
-                            *CURSORS[self.cursor_name]["hand"]
-                        )
-                    except Exception as e:
-                        log_fatal_error(
-                            f"Something went wrong while handling cursor (hand): {e}"
-                        )
-                        exit(1)
+                    pygame.mouse.set_cursor(
+                        CURSOR_SIZE,
+                        CURSOR_OFFSET[self.cursor_name]["hand"],
+                        *CURSORS[self.cursor_name]["hand"]
+                    )
                 
                 break
         else:
-            #pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             if self.cursor_name is None:
-                pygame.mouse.set_cursor(SYS_CURSOR)
-            elif self.cursor_name == "pygame":
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             else:
-                try:
-                    pygame.mouse.set_cursor(
-                        CURSOR_SIZE,
-                        CURSOR_OFFSET[self.cursor_name]["arrow"],
-                        *CURSORS[self.cursor_name]["arrow"]
-                    )
-                except Exception as e:
-                    log_fatal_error(
-                        f"Something went wrong while handling cursor (arrow): {e}"
-                    )
-                    exit(1)
+                pygame.mouse.set_cursor(
+                    CURSOR_SIZE,
+                    CURSOR_OFFSET[self.cursor_name]["arrow"],
+                    *CURSORS[self.cursor_name]["arrow"]
+                )
 
         if debug:
             fps_text_rendered: pygame.Surface = FONT32.render(

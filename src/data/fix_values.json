@@ -20,8 +20,8 @@
             240
         ], "allowed_cursors": [
             null,
-            "pygame",
-            "custom1"
+            "custom1",
+            "custom2"
        ]
     }, "color": {
         "red":               [255,   0,   0],
@@ -46,17 +46,26 @@
         "gray3/4":           [191, 191, 191]
     }, "theme_style": {
         "dark": {
-            "debug_text_color":   "cyan",
-            "background":         "gray31",
-            "button_bg_color":    "gray31",
-            "button_hover_color": "gray63",
-            "button_text_color":  "gray3/4"
+            "debug_text_color":    "cyan",
+            "background":          "gray31",
+            "button_bg_color":     "gray31",
+            "button_hover_color":  "gray63",
+            "button_text_color":   "gray3/4",
+            "button_border_color": "gray3/4"
         }, "light": {
-            "debug_text_color":   "magenta",
-            "background":         "gray3/4",
-            "button_bg_color":    "gray3/4",
-            "button_hover_color": "gray127",
-            "button_text_color":  "gray31"
+            "debug_text_color":    "magenta",
+            "background":          "gray3/4",
+            "button_bg_color":     "gray3/4",
+            "button_hover_color":  "gray127",
+            "button_text_color":   "gray31",
+            "button_border_color": "gray31"
+        }, "high contrast": {
+            "debug_text_color":    "magenta",
+            "background":          "black",
+            "button_bg_color":     "black",
+            "button_hover_color":  "cyan",
+            "button_text_color":   "magenta",
+            "button_border_color": "magenta"
         }
     }, "gui": {
         "global": {

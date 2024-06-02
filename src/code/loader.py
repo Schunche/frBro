@@ -144,7 +144,6 @@ def load_text(
         return None
 
 CURSOR_SIZE: Size = (24, 24)
-SYS_CURSOR: pygame.cursors.Cursor = pygame.mouse.get_cursor()
 CURSOR_OFFSET: dict[str, dict[str, Coordinate]] = load_json("data/cursor/offsets")
 
 CURSORS: dict[str, dict[str, pygame.cursors.Cursor]] = {

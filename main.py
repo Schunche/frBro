@@ -69,6 +69,10 @@ try:
         Map     ,\
         load_map,\
         get_all_map_names
+    
+    from src.code.text import \
+        TextElement,\
+        texts
 
 except Exception as e:
     print(e)
@@ -77,9 +81,23 @@ except Exception as e:
     exit(1)
 
 try:
+    # buttons[state][name]
     buttons: dict[str, dict[str, TextButton | ImageButton | ChangingTextButton]] = get_buttons(
         WINDOW_SIZE
     )
+
+    # == MISC == #
+
+    def __get_left_or_right_click__() -> int:
+        """
+        Return
+            1 if left click released
+            -1 if right click released
+            0 otherwise
+        """
+        if pygame.mouse.get_just_released()[0]: return 1
+        elif pygame.mouse.get_just_released()[2]: return -1
+        else: return 0
     
     # == MAIN_MENU == #
 
@@ -108,7 +126,7 @@ try:
         if WINDOW_SIZE not in RESOLUTIONS:
             raise ValueError("Current WINDOW_SIZE is not in the allowed_display_resolutions dictionary.")
         
-        WINDOW_SIZE = RESOLUTIONS[(RESOLUTIONS.index(WINDOW_SIZE) + 1) % len(RESOLUTIONS)]
+        WINDOW_SIZE = RESOLUTIONS[(RESOLUTIONS.index(WINDOW_SIZE) + __get_left_or_right_click__()) % len(RESOLUTIONS)]
         
         args[0].WINDOW = pygame.display.set_mode(
             WINDOW_SIZE,
@@ -120,9 +138,14 @@ try:
         flags: int = args[0].WINDOW.get_flags()
 
         #fulls -> nofra -> border -> fulls...
-        if flags & pygame.FULLSCREEN: new_flags: int = pygame.NOFRAME
-        elif flags & pygame.NOFRAME: new_flags: int = 0
-        else: new_flags: int = pygame.FULLSCREEN
+        if __get_left_or_right_click__() == 1:
+            if flags & pygame.FULLSCREEN: new_flags: int = pygame.NOFRAME
+            elif flags & pygame.NOFRAME: new_flags: int = 0
+            else: new_flags: int = pygame.FULLSCREEN
+        else:
+            if flags & pygame.FULLSCREEN: new_flags: int = 0
+            elif flags & pygame.NOFRAME: new_flags: int = pygame.FULLSCREEN
+            else: new_flags: int = pygame.NOFRAME
         
         args[0].WINDOW = pygame.display.set_mode(
             WINDOW_SIZE,
@@ -135,7 +158,7 @@ try:
         if FPS not in FPS_LIST:
             raise ValueError("The current FPS value is not in the FPS list.")
 
-        FPS = FPS_LIST[(FPS_LIST.index(FPS) + 1) % len(FPS_LIST)]
+        FPS = FPS_LIST[(FPS_LIST.index(FPS) + __get_left_or_right_click__()) % len(FPS_LIST)]
 
     def __settings__theme__(self: ChangingTextButton, *args, **kwags) -> None:
         global THEME
@@ -143,7 +166,7 @@ try:
         if THEME not in list(THEME_STYLE.keys()):
             raise ValueError("The current theme is not valid.")
 
-        THEME = list(THEME_STYLE.keys())[(list(THEME_STYLE.keys()).index(THEME) + 1) % len(list(THEME_STYLE.keys()))]
+        THEME = list(THEME_STYLE.keys())[(list(THEME_STYLE.keys()).index(THEME) + __get_left_or_right_click__()) % len(list(THEME_STYLE.keys()))]
 
     def __settings__cursor__(self: ChangingTextButton, *args, **kwags) -> None:
 
@@ -151,9 +174,11 @@ try:
             raise ValueError("The current cursor is not valid.")
 
         # Set cursor to next on in the list
-        args[0].cursor_name = CURSOR_LIST[(CURSOR_LIST.index(args[0].cursor_name) + 1) % len(CURSOR_LIST)]
+        args[0].cursor_name = CURSOR_LIST[(CURSOR_LIST.index(args[0].cursor_name) + __get_left_or_right_click__()) % len(CURSOR_LIST)]
 
     def __settings__back__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
+
+    # == RETURN == #
 
     def update_button_functionality() -> None:
         for state, butt in buttons.items():
@@ -198,27 +223,11 @@ class Main:
         self: Self
     ) -> Self:
         self.clock: pygame.time.Clock = pygame.time.Clock()
-        self.WINDOW: pygame.Surface = pygame.display.set_mode(
-            WINDOW_SIZE
-        )
-        pygame.display.set_caption(
-            TITLE
-        )
-        pygame.display.set_icon(
-            load_image(
-                "logo/icon"
-            )
-        )
+        self.WINDOW: pygame.Surface = pygame.display.set_mode(WINDOW_SIZE)
+        pygame.display.set_caption(TITLE)
+        pygame.display.set_icon(load_image("logo/icon"))
         self.cursor_name: None | str = None
-        print(CURSORS)
-        self.set_state(
-            "main_menu"
-        )
-        log_debug(
-            get_all_map_names(
-                
-            )
-        )
+        self.set_state("main_menu")
 
     def handle_input(
         self: Self
@@ -241,7 +250,8 @@ class Main:
                 update_button_functionality()
 
             if event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1:
+                if event.button == 1 or \
+                (event.button == 3 and self.state == "settings"):
                     for name, button in buttons[self.state].items():
                         if button.inner_rect.collidepoint(self.mouse_pos):
                             button.push(self)
@@ -274,9 +284,16 @@ class Main:
         self: Self,
         debug: bool = False
     ) -> None:
+        # == ACTUAL RENDER == #
         self.WINDOW.fill(
             COLOR[THEME_STYLE[THEME]["background"]]
         )
+
+        for name in texts[self.state].keys():
+            text = texts[self.state][name][THEME]
+            text.render(
+                self.WINDOW
+            )
 
         for name, button in buttons[self.state].items():
             if isinstance(button, ChangingTextButton) and self.state == "settings":
@@ -326,7 +343,7 @@ class Main:
                         self.WINDOW,
                         self.mouse_pos,
                         THEME,
-                        "Cursor style: " + (str(self.cursor_name) if self.cursor_name is not None else f"System")
+                        ("Cursor style: " + (str(self.cursor_name) if self.cursor_name is not None else f"System")).title()
                     )
 
             else:
@@ -336,10 +353,15 @@ class Main:
                     THEME
                 )
 
+        # == HOVER EFFECT == #
         for name, button in buttons[self.state].items():
             if button.inner_rect.collidepoint(self.mouse_pos):
                 if self.cursor_name is None:
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                elif self.cursor_name == "pygame #1":
+                    pygame.mouse.set_cursor(pygame.cursors.ball)
+                elif self.cursor_name == "pygame #2":
+                    pygame.mouse.set_cursor(pygame.cursors.tri_right)
                 else:
                     pygame.mouse.set_cursor(
                         CURSOR_SIZE,
@@ -351,6 +373,10 @@ class Main:
         else:
             if self.cursor_name is None:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            elif self.cursor_name == "pygame #1":
+                    pygame.mouse.set_cursor(*pygame.cursors.arrow)
+            elif self.cursor_name == "pygame #2":
+                    pygame.mouse.set_cursor(*pygame.cursors.tri_left)
             else:
                 pygame.mouse.set_cursor(
                     CURSOR_SIZE,
@@ -358,6 +384,7 @@ class Main:
                     *CURSORS[self.cursor_name]["arrow"]
                 )
 
+        # == DEBUG RENDER == #
         if debug:
             fps_text_rendered: pygame.Surface = FONT32.render(
                 f"FPS: {1 / self.dt:.2f}",
@@ -385,7 +412,7 @@ class Main:
 
             self.handle_input()
             self.update()
-            self.render(True)
+            self.render()
             
             pygame.display.update()
 

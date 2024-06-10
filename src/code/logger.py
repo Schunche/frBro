@@ -1,3 +1,11 @@
+if __name__ == "__main__":
+    red_bg: str = "\033[41m"
+    print(
+        f"{red_bg}Import this module, don\'t run it directly."
+    )
+    del red_bg
+    exit(0)
+    
 """
 Import this module.
 """
@@ -116,4 +124,25 @@ def log_debug(
         "bg_blue",
         "bold",
         "fg_black"
+    )
+
+def log_server(
+    *text: str
+) -> None:
+    text_: str = "".join(text)
+    log(
+        f"[SERVER]{text_}",
+        "bg_orange",
+        "fg_dark_grey"
+    )
+
+def log_client(
+    IPv: int,
+    *text: str
+) -> None:
+    text_: str = "".join(text)
+    log(
+        f"[{IPv}]: {text_}",
+        "bg_purple",
+        "fg_cyan"
     )

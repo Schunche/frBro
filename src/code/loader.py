@@ -5,6 +5,7 @@ if __name__ == "__main__":
 import os
 import json
 import pygame
+import socket
 
 from src.code.const import \
     Coordinate,\
@@ -89,6 +90,7 @@ TRANSPARENT_COLOR: pygame.color.Color = COLOR["transparent_color"]
 THEME_STYLE: dict[str, dict[str, str]] = FIX_STGS["theme_style"]
 
 GUI_STGS: dict[str, dict[str]] = FIX_STGS["gui"]
+GLOBAL_GUI_STGS: dict[str] = GUI_STGS["global"]
 
 FONT32: pygame.font.Font = pygame.font.Font(None, 32)
 
@@ -159,3 +161,42 @@ CURSORS: dict[str, dict[str, pygame.cursors.Cursor]] = {
         f"src/data/cursor"
     ) if cursor_style in CURSOR_LIST and cursor_style != "offsets.json"
 }
+
+def dict_to_str(
+    dict_: dict
+) -> str:
+    assert type(dict_) == dict, f"Given argument is not a dict: {dict_}"
+    str_: str = json.dumps(dict_)
+    return str_
+
+def str_to_dict(
+    str_: str
+) -> dict[str, JsonReturn]:
+    try:
+        dict_: dict = json.loads(str_)
+    except Exception as e:
+        log_error(f"Given argument is not a dict disguised as a str: {str_}\nException: {e}")
+        return None
+    return dict_
+
+
+def get_hamachi_IPv4() -> str | None:
+    """
+    Returns the hamachi IPv4 Address if it senses something that matches the description.
+    """
+    adresses = socket.getaddrinfo(
+        socket.gethostname(), 0
+    )
+    viable_adresses = [
+        address for address in adresses \
+        if len(address[-1]) == 2 \
+        and address[-1][0][:4] != "192."
+    ][0][-1]
+
+    if len(viable_adresses) == 0:
+        return None
+    elif len(viable_adresses) == 1:
+        return viable_adresses[0]
+    return viable_adresses[0]
+
+IPv4: str = get_hamachi_IPv4()

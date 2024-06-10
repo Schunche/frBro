@@ -1,4 +1,4 @@
-# frBro
+# [frBro](https://github.com/Schunche/frBro)
 ## 2024. 05. 26.
 <h3>
     File system:
@@ -76,7 +76,7 @@
 2. changing text, that does change, with hover effect
 3. image, that does not change, without hover effect
 
-## 2024. 05. 02.
+## 2024. 06. 02.
 #### Built-in cursors
 
 - pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)     # normal cursor
@@ -95,6 +95,24 @@
 - pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_WAIT)      # load anim circle # 1
 - pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_WAITARROW) # load anim circle # 2
 
+**pygame *ready* cursors**
+
+- pygame.cursors.arrow     # inverted normal arrow
+
+- pygame.cursors.ball      # just a black ball & center is the hotspot
+- pygame.cursors.broken_x  # a shooter like "X", with the center being a hole, again, inverted
+- pygame.cursors.diamond   # a 45^ degree rotated square, with itself in the center (donut-like)
+
+- pygame.cursors.tri_left  # a thing, i have almost created
+- pygame.cursors.tri_right # a thing, i have almost created, revered along the y axis
+
 **Currently using:**
 - pygame.SYSTEM_CURSOR_ARROW # normal cursor
 - pygame.SYSTEM_CURSOR_HAND  # normal hand with finger
+
+## 2024. 06. 07. - [multi-demo](https://github.com/Schunche/multi-demo) - Project started
+I have a fairly okay menu system, i started this secondary project to learn how to send data between different computers.
+
+## 2024. 06. 10.
+
+Trying to connect [this project](https://github.com/Schunche/frBro) with the [networking one](https://github.com/Schunche/multi-demo)

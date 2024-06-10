@@ -20,6 +20,8 @@
             240
         ], "allowed_cursors": [
             null,
+            "pygame #1",
+            "pygame #2",
             "custom1",
             "custom2"
        ]

@@ -37,7 +37,7 @@
         "black":             [  0,   0,   0],
         "white":             [255, 255, 255],
         
-        "transparent_color": [255, 255, 255],
+        "transparent_color": [255, 254, 255],
 
         "gray127":           [127, 127, 127],
         "gray63":            [ 63,  63,  63],
@@ -45,7 +45,13 @@
         "gray15":            [ 15,  15,  15],
         "gray7":             [  7,   7,   7],
         
-        "gray3/4":           [191, 191, 191]
+        "gray3/4":           [191, 191, 191],
+
+        "stone_gray":        [127, 127, 127],
+        "stone_shine":       [191, 191, 191],
+        "grass_green":       [ 31, 191,  63],
+        "dirt_brown":        [127,  79,  63],
+        "dirt_shine":        [144,  95,  79]
     }, "theme_style": {
         "dark": {
             "debug_text_color":    "cyan",

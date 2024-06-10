@@ -40,23 +40,23 @@ def get_all_map_names() -> list[str]:
 def load_map(
     path: str
 ) -> Map | None:
-    rmap: dict[str, dict] = load_json(
+    map_: dict[str, dict] = load_json(
         f"map/{path}"
     )
-    if rmap is None:
+    if map_ is None:
         log_fatal_error(
             f"Couldn\'t load \'{path}\'"
         )
         return None
     
-    rtilemap: dict[Coordinate, Tile] = field(
+    tilemap_: dict[Coordinate, Tile] = field(
         default_factory=dict
     )
-    for str_key, value in rmap["tilemap"].items():
+    for str_key, value in map_["tilemap"].items():
         key_parts: list[str, str] = str_key.split(';')
         key: Coordinate = (int(key_parts[0]), int(key_parts[1]))
-        rtilemap[key] = value
+        tilemap_[key] = value
 
     return Map(
-        rtilemap
+        tilemap_
     )

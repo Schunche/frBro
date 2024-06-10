@@ -429,7 +429,7 @@ def get_buttons(
     buttons_: dict[str, dict[str, TextButton | ImageButton | ChangingTextButton]] = {}
 
     # == MAIN_MENU == # APPLICABLE | EXPANDABLE
-    num: int = 4
+    num: int = 5
     button_height: int = int(
         (window_size[1] - (num - 1) * GLOBAL_GUI_STGS["element_interval"] - 2 * GLOBAL_GUI_STGS["outer_padding"]) / num
     )
@@ -446,7 +446,10 @@ def get_buttons(
     # ==>
     buttons_["main_menu"] = {
         # COL 1
-        "play": TextButton("Play",
+        "singleplayer": TextButton("Singleplayer",
+            (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"]),
+            (button_width, button_height)
+        ),"multiplayer": TextButton("Multiplayer",
             (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"]),
             (button_width, button_height)
         ), "settings": TextButton("Settings",
@@ -511,15 +514,14 @@ def get_buttons(
     # ==>
     buttons_["credits"] = {}
 
-    # == PLAYER_SELECTION == # TODO
+    # == SOLO / PLAYER_SELECTION == # TODO
+    
 
-    # ==>
-    buttons_["player_selection"] = {
-        "back": TextButton("Back",
-            (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"]),
-            (256, 128)
-        )
-    }   
+    # SOLO ==>
+    buttons_["solo/player_selection"] = {}
+
+    # MULTI ==>
+    buttons_["multi/player_selection"] = {}
 
     # == RETURN == # APPLICABLE
     #buttons_[state][alias] = Button

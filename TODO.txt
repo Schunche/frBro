@@ -1,0 +1,12 @@
+singleplayer
+multiplayer
+
+basic player
+basic tilemap
+
+steal those from other project
+
+tilemapizer (make tiles prettier based op if they are )
+
+do multiplayer last DO NOT think about that yet
+

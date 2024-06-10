@@ -1,7 +1,10 @@
-ExitCode =  int | None | str
+from typing import \
+    TypeAlias
 
-Coordinate = tuple[int, int]
-Tile = dict[str, str | int]
-Size = list[int, int]
+ExitCode: TypeAlias = (int | None | str)
 
-JsonReturn = dict | list | None | bool | int | float | str
+Coordinate: TypeAlias = tuple[int, int]
+Tile: TypeAlias = dict[str, str | int]
+Size: TypeAlias = list[int, int]
+
+JsonReturn: TypeAlias = (dict | list | None | bool | int | float | str)

@@ -101,17 +101,22 @@ try:
     
     # == MAIN_MENU == #
 
-    def __main_menu__play__    (self: TextButton, *args, **kwargs) -> None: args[0].set_state("player_selection")
-    def __main_menu__settings__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("settings")
-    def __main_menu__credits__ (self: TextButton, *args, **kwargs) -> None: args[0].set_state("credits")
-    def __main_menu__exit__    (self: TextButton, *args, **kwargs) -> NoReturn: args[0].proper_exit()
-    def __main_menu__teaser__  (self: TextButton, *args, **kwargs) -> NoReturn:
+    def __main_menu__singleplayer__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("solo/player_selection")
+    def __main_menu__multiplayer__ (self: TextButton, *args, **kwargs) -> None: args[0].set_state("multi/player_selection")
+    def __main_menu__settings__    (self: TextButton, *args, **kwargs) -> None: args[0].set_state("settings")
+    def __main_menu__credits__     (self: TextButton, *args, **kwargs) -> None: args[0].set_state("credits")
+    def __main_menu__exit__        (self: TextButton, *args, **kwargs) -> NoReturn: args[0].proper_exit()
+    def __main_menu__teaser__      (self: TextButton, *args, **kwargs) -> NoReturn:
         webbrowser.open('https://github.com/Schunche', new=2)
         args[0].proper_exit(0)
 
-    # == PLAYER_SELECTION == #
+    # == SOLO / PLAYER_SELECTION == #
     
-    def __player_selection__back__(self: ImageButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
+    #def __player_selection__back__(self: ImageButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
+    
+    # == MULTI / PLAYER_SELECTION == #
+    
+    #def __player_selection__back__(self: ImageButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
 
     # == SETTINGS == #
 

@@ -82,9 +82,6 @@ class Network:
             # now {data_} is surely a dict
             self.client.send(str.encode(dict_to_str(data_)))
 
-            if "need_response" not in data_:
-                data_["need_response"] = False
-
             # getting response
             if not data_.get("need_response", False):
                 return None

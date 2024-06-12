@@ -116,7 +116,7 @@ class Server:
                     case _:
                         pass
 
-                log_server(f"[{address[0]}]: GOT: {dict_msg = }")
+                log_server(f"[{address[0]}]: GOT {dict_msg}")
 
                 # RESPOND
                 if not dict_msg.get("need_response", False):

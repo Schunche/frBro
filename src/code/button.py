@@ -7,9 +7,12 @@ import pygame
 from src.code.const import \
     Coordinate,\
     Size
+
 from src.code.logger import \
-    log_error,\
-    log_fatal_error
+    log_error      ,\
+    log_fatal_error,\
+    log_debug
+
 from src.code.loader import \
     FIX_STGS       ,\
     COLOR          ,\
@@ -426,7 +429,9 @@ class PlayerSelectionButton:
 def get_buttons(
     window_size: Size
 ) -> dict[str, dict[str, TextButton | ImageButton | ChangingTextButton]]:
-    buttons_: dict[str, dict[str, TextButton | ImageButton | ChangingTextButton]] = {}
+    buttons_: dict[str, dict[str, TextButton | ImageButton | ChangingTextButton]] = {
+        state: {} for state in FIX_STGS["state"]
+    }
 
     # == MAIN_MENU == # APPLICABLE | EXPANDABLE
     num: int = 5
@@ -450,16 +455,16 @@ def get_buttons(
             (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"]),
             (button_width, button_height)
         ),"multiplayer": TextButton("Multiplayer",
-            (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"]),
-            (button_width, button_height)
-        ), "settings": TextButton("Settings",
             (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"] + 1 * (button_height + GLOBAL_GUI_STGS["element_interval"])),
             (button_width, button_height)
-        ), "credits": TextButton("Credits",
+        ), "settings": TextButton("Settings",
             (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"] + 2 * (button_height + GLOBAL_GUI_STGS["element_interval"])),
             (button_width, button_height)
-        ), "exit": TextButton("Exit",
+        ), "credits": TextButton("Credits",
             (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"] + 3 * (button_height + GLOBAL_GUI_STGS["element_interval"])),
+            (button_width, button_height)
+        ), "exit": TextButton("Exit",
+            (GLOBAL_GUI_STGS["outer_padding"], GLOBAL_GUI_STGS["outer_padding"] + 4 * (button_height + GLOBAL_GUI_STGS["element_interval"])),
             (button_width, button_height)
         ),
         # MAIN IMAGE
@@ -514,14 +519,22 @@ def get_buttons(
     # ==>
     buttons_["credits"] = {}
 
-    # == SOLO / PLAYER_SELECTION == # TODO
+    # == SOLO _ PLAYER_SELECTION == # TODO
+    player_button_count: int = 4
+    player_button_height: int = int(
+        (window_size[1] - (player_button_count - 1) * GLOBAL_GUI_STGS["element_interval"] - 2 * GLOBAL_GUI_STGS["outer_padding"]) / player_button_count
+    )
+    player_button_width: int = int(
+        (window_size[0] - GLOBAL_GUI_STGS["element_interval"] - 2 * GLOBAL_GUI_STGS["outer_padding"]) * 2 // 3
+    )
     
+    # ==>
+    buttons_["solo_player_selection"] = {}
 
-    # SOLO ==>
-    buttons_["solo/player_selection"] = {}
-
-    # MULTI ==>
-    buttons_["multi/player_selection"] = {}
+    # == MULTI _ PLAYER_SELECTION == # TODO
+    
+    # ==>
+    buttons_["multi_player_selection"] = {}
 
     # == RETURN == # APPLICABLE
     #buttons_[state][alias] = Button

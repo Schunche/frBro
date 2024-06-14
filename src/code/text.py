@@ -9,6 +9,7 @@ import pygame
 from src.code.const import \
     Coordinate
 from src.code.loader import \
+    FIX_STGS       ,\
     COLOR          ,\
     THEME_STYLE    ,\
     GLOBAL_GUI_STGS,\
@@ -44,18 +45,11 @@ class TextElement:
 def get_texts() -> dict[str, dict[str, dict[str, TextElement]]]:
     # texts[state][name][theme]
     texts_: dict[str, dict[str, dict[str, TextElement]]] = {
-        "main_menu": {
-
-        }, "credits": {
-            "author": {},
-            "cmd": {}
-        }, "settings": {
-
-        }, "player_selection": {
-
-        }
+        state: {} for state in FIX_STGS["state"]
     }
     themes: list[str] = list(THEME_STYLE.keys())
+    texts_["credits"]["author"] = {}
+    texts_["credits"]["cmd"]    = {}
 
     # == CREDITS == #
     for theme in themes:

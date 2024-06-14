@@ -68,12 +68,12 @@
             "button_text_color":   "gray31",
             "button_border_color": "gray31"
         }, "high contrast": {
-            "debug_text_color":    "magenta",
+            "debug_text_color":    "yellow",
             "background":          "black",
             "button_bg_color":     "black",
-            "button_hover_color":  "cyan",
-            "button_text_color":   "magenta",
-            "button_border_color": "magenta"
+            "button_hover_color":  "magenta",
+            "button_text_color":   "yellow",
+            "button_border_color": "yellow"
         }
     }, "gui": {
         "global": {
@@ -85,5 +85,12 @@
         }
     }, "duarbility_of_tile": {
         "dirt": 75
-    }
+    }, "state": ["DO NOT INCLUDE SPECIAL CHARACTERS, ONLY a-z, 0-9, _",
+        "main_menu",
+        "settings",
+        "credits",
+        "solo_player_selection",
+        "multi_player_selection",
+        "multi_host_join_player_selection"
+    ]
 }

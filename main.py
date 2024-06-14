@@ -4,10 +4,10 @@ if __name__ != "__main__":
 from typing import \
     Self    ,\
     NoReturn,\
-    Any     ,\
-    Callable
+    Any
+    
 from types import \
-    MethodType
+    MethodType  # This is used
 
 import webbrowser
 
@@ -101,8 +101,8 @@ try:
     
     # == MAIN_MENU == #
 
-    def __main_menu__singleplayer__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("solo/player_selection")
-    def __main_menu__multiplayer__ (self: TextButton, *args, **kwargs) -> None: args[0].set_state("multi/player_selection")
+    def __main_menu__singleplayer__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("solo_player_selection")
+    def __main_menu__multiplayer__ (self: TextButton, *args, **kwargs) -> None: args[0].set_state("multi_player_selection")
     def __main_menu__settings__    (self: TextButton, *args, **kwargs) -> None: args[0].set_state("settings")
     def __main_menu__credits__     (self: TextButton, *args, **kwargs) -> None: args[0].set_state("credits")
     def __main_menu__exit__        (self: TextButton, *args, **kwargs) -> NoReturn: args[0].proper_exit()
@@ -110,19 +110,25 @@ try:
         webbrowser.open('https://github.com/Schunche', new=2)
         args[0].proper_exit(0)
 
-    # == SOLO / PLAYER_SELECTION == #
+    # == SOLO _ PLAYER_SELECTION == #
     
-    #def __player_selection__back__(self: ImageButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
+    # same as MULTI _ PLAYER_SELECTION
     
-    # == MULTI / PLAYER_SELECTION == #
+    def __solo_player_selection__back__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
     
-    #def __player_selection__back__(self: ImageButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
+    # == MULTI _ PLAYER_SELECTION == #
+    
+    # same as SOLO _ PLAYER_SELECTION
+    
+    def __multi_player_selection__back__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
+
+    # == MULTI _ HOST_JOIN_SELECTION == #
+    
+    def __multi_host_join_player_selection__join__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
+    def __multi_host_join_player_selection__host__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
+    def __multi_host_join_player_selection__back__(self: TextButton, *args, **kwargs) -> None: args[0].set_state("main_menu")
 
     # == SETTINGS == #
-
-    # TODO on rightclick setting goes backwards
-    # It should take up one more argument 
-    # OR check for click type in function / extenal function / when the button push gets called
 
     def __settings__display_resolution__(self: ChangingTextButton, *args, **kwags) -> None:
         global RESOLUTIONS
@@ -268,7 +274,8 @@ class Main:
                     if self.state == "main_menu":
                         self.proper_exit(0)
                     elif self.state in [
-                        "player_selection",
+                        "solo_player_selection",
+                        "multi_player_selection",
                         "settings",
                         "credits"
                     ]:
@@ -287,6 +294,7 @@ class Main:
 
     def render(
         self: Self,
+        *,
         debug: bool = False
     ) -> None:
         # == ACTUAL RENDER == #
@@ -417,7 +425,9 @@ class Main:
 
             self.handle_input()
             self.update()
-            self.render()
+            self.render(
+                debug=False
+            )
             
             pygame.display.update()
 

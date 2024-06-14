@@ -80,47 +80,61 @@ def log(
     *styles: str,
     only_text: bool = True
 ) -> None:
-    if styles != ():
-        if only_text:
-            print(f"{time.asctime()} :> {ColorTerminal.apply(f'{text}', *styles)}")
-        else:
-            print(ColorTerminal.apply(f"{time.asctime()} :> {text}", *styles))
-    else:
-        print(f"{time.asctime()} :> {text}")
+    time_: str = time.asctime().split()[3]
+    if styles == ():
+        print(
+            f"{time_} :> {text}"
+        )
+        return None
+    if only_text:
+        print(
+            f"{time_} :> {ColorTerminal.apply(f'{text}', *styles)}"
+        )
+        return None
+    print(
+        ColorTerminal.apply(
+            f"{time_} :> {text}",
+            *styles
+        )
+    )
 
 def log_fatal_error(
-    text
+    *text: str
 ) -> None:
+    text_: str = ", ".join(text)
     log(
-        text,
+        text_,
         "bg_red",
         "fg_black",
         only_text=False
     )
 
 def log_error(
-    text
+    *text: str
 ) -> None:
+    text_: str = ", ".join(text)
     log(
-        text,
+        text_,
         "bg_red",
         "fg_black"
     )
 
 def log_success(
-    text
+    *text: str
 ) -> None:
+    text_: str = ", ".join(text)
     log(
-        text,
+        text_,
         "bg_green",
         "fg_black"
     )
 
 def log_debug(
-    text
+    *text: str
 ) -> None:
+    text_: str = ", ".join(text)
     log(
-        text,
+        text_,
         "bg_blue",
         "bold",
         "fg_black"
@@ -129,7 +143,7 @@ def log_debug(
 def log_server(
     *text: str
 ) -> None:
-    text_: str = "".join(text)
+    text_: str = ", ".join(text)
     log(
         f"[SERVER]{text_}",
         "bg_orange",
@@ -140,7 +154,7 @@ def log_client(
     IPv: int,
     *text: str
 ) -> None:
-    text_: str = "".join(text)
+    text_: str = ", ".join(text)
     log(
         f"[{IPv}]: {text_}",
         "bg_purple",
